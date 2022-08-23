@@ -9,29 +9,40 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.2/firebase-app.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.9.2/firebase-database.js";
-
+        import { getDatabase, ref, set, push,onValue } from "https://www.gstatic.com/firebasejs/9.9.2/firebase-database.js";
+        
         const firebaseConfig = {
-          apiKey: "AIzaSyD1lnLa4bQ8xebgnhMIvCSOXBGaasJCfKE",
-          authDomain: "todo-3a70f.firebaseapp.com",
-          databaseURL: "https://todo-3a70f-default-rtdb.firebaseio.com",
-          projectId: "todo-3a70f",
-          storageBucket: "todo-3a70f.appspot.com",
-          messagingSenderId: "134507466806",
-          appId: "1:134507466806:web:d92eb580cdbc324ee74897"
-        };
+            apiKey: "AIzaSyD2zup21sYn_5pTp1eFmZ6ccLdlknZm37s",
+            authDomain: "todo-9a2af.firebaseapp.com",
+            projectId: "todo-9a2af",
+            storageBucket: "todo-9a2af.appspot.com",
+            messagingSenderId: "1050002696637",
+            appId: "1:1050002696637:web:3864b3cb740247d04e8ad4"
+  };
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
         submit.addEventListener('click', (e)=>{
-            set(ref(database, '/'), {
+            set(push(ref(database, '/')), {
                 //todo: document.getElementById('plan').value,
-                name: "김현우",
-                age: 13,
-                address: "제천시",
-                school: "SW중",
-                grade: 3
+                todo: document.getElementById('plan').value,
             });
+        });
+
+        onValue(ref(database,'/'),(snapshot)=>{
+            snapshot.forEach((childSnapshot)=>{
+                const childKey=childSnapshot.key;
+                const childData=childSnapshot.val();
+
+
+
+                console.log(childKey);
+                console.log(childData);
+                
+                a=list+childData.todo;
+
+            });
+            document.getElementById('watch').innerHTML=a;
         });
     </script>
 </head>
@@ -46,9 +57,10 @@
         </div>
         <div id="todo_list"></div>
         <div class="mt-2">
-            <input type="text" id="plan" class="form-control" placeholder="할 일을 입력하세요.">
+            <input type="text" id="plan" class="form-control" placeholder="할 일입력">
             <button type="submit" id="submit" class="btn btn-primary mt-1 w-100">입력하기</button>
         </div>
+        <div id="watch"></div>
     </div>
 </body>
 </html>
