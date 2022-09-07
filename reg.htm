@@ -10,7 +10,7 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.2/firebase-app.js";
-        import { getDatabase, ref, set, push,onValue } from "https://www.gstatic.com/firebasejs/9.9.2/firebase-database.js";
+        import { getDatabase, ref, set, push,onValue,remove,get,child} from "https://www.gstatic.com/firebasejs/9.9.2/firebase-database.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyAFH5fjMhKVNdP2A32pmqfjexLV9OfNqf8",
@@ -24,12 +24,34 @@
         const database = getDatabase(app);
 
         
-        submit.addEventListener('click', (e)=>{
-            set(push(ref(database, '/')), {
-            name: document.getElementById('name').value,
-            phone: document.getElementById('phone').value,
-            });
+       
+            submit.addEventListener('click', (e)=>{
+                if(document.getElementById('name').value != '' && document.getElementById('phone').value != ''  && document.getElementById('agree').checked==true){
+                    get(child(ref(database),'/'+document.getElementById('phone').value)).then((snapshot)=>{
+                        if(!snapshot.exists()){
+                            
+                        set(ref(database, '/'+document.getElementById('phone').value+'/'), {
+                            name: document.getElementById('name').value,
+                            phone: document.getElementById('phone').value,
+                        
+                        });
+                        document.getElementById('name').value='';
+                        document.getElementById('phone').value='';
+                        }
+                        else{
+                            alert('이미 등록된 번호입니다');
+                        }
+                    });
+
+
+                    
+                }
+            else{
+                alert('빠진 내용이 있습니다');
+            }
+                
         });
+    
         
 
 
@@ -60,7 +82,7 @@
 
 
     </div>
-        <input type="checkbox" id="agree" >
+        <input type="checkbox" id="agree">
         <label for="agree">개인정보 수집및 사용에 동의 합니다.</label>
         <button type="button" id="submit" class="btn btn-primary">입장 사전 등록</button>
         <br>
