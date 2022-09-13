@@ -29,19 +29,23 @@
                 if(document.getElementById('name').value != '' && document.getElementById('phone').value != ''  && document.getElementById('agree').checked==true){
                     get(child(ref(database),'/'+document.getElementById('phone').value)).then((snapshot)=>{
                         if(!snapshot.exists()){
+                            let today = new Date();   
                             
-                        set(ref(database, '/'+document.getElementById('phone').value+'/'), {
-                            name: document.getElementById('name').value,
-                            phone: document.getElementById('phone').value,
-                        
-                        });
-                        document.getElementById('name').value='';
-                        document.getElementById('phone').value='';
+                            set(ref(database, '/'+document.getElementById('phone').value+'/'), {
+                                name: document.getElementById('name').value,
+                                phone: document.getElementById('phone').value,
+                                regTime: today.toLocaleString(),
+                                enterTime: '',
+                                isEnter: '0'
+                            
+                                });
+                            document.getElementById('name').value='';
+                            document.getElementById('phone').value='';
                         }
                         else{
                             alert('이미 등록된 번호입니다');
                         }
-                    });
+                        });
 
 
                     
